@@ -1,0 +1,90 @@
+1.Find all the information about each products
+
+db.TaskAns.find({});
+
+o/p: 25 id's displayed.
+
+*************************************************************************************************************************
+
+2.Find the product price which are between 400 to 800
+
+db.TaskAns.find ( { "product_price" : {$gte: 400, $lte: 800} } );
+
+o/p: 1,3,4,6,7 id's displayed.
+
+*************************************************************************************************************************
+
+3.Find the product price which are not between 400 to 600
+
+db.TaskAns.find ( { "product_price" : {$nin: [400, 600],$gte: 600} } );
+                 
+o/p: 1,2,3 id's displayed.
+
+*************************************************************************************************************************
+
+4.List the four product which are grater than 500 in price
+
+db.TaskAns.find ( {"product_price": { $gt: 500 } } ).limit(4);
+                 
+o/p: 1,2,3 id's displayed.
+
+*************************************************************************************************************************
+
+5.Find the product name and product material of each products
+
+db.TaskAns.find ( {}, { "product_name": 1, "product_material": 1, "_id": 0 } );
+
+o/p: 25 id's product_name & product_material documents only displayed.
+
+*************************************************************************************************************************
+
+6.Find the product with a row id of 10
+
+db.TaskAns.findOne ( { "id": "10" } );
+                 
+o/p: 10th id only displayed.
+
+*************************************************************************************************************************
+
+7.Find id of 10th only the product name and product material
+
+db.TaskAns.findOne ( { "id": "10" }, { "product_name": 1, "product_material": 1, "_id": 0 });
+                 
+o/p: 10th id only displayed given below:
+
+    {
+    product_name: 'Generic Wooden Pizza',
+    product_material: 'Frozen'
+    }
+
+*************************************************************************************************************************
+
+8.Find all products which contain the value of soft in product material
+
+db.TaskAns.find ( { "product_material": { $regex: /Soft/i } } );
+
+o/p: 4,9,11,19 id's displayed.
+
+*************************************************************************************************************************
+
+9.Find products which contain product color indigo  and product price 492.00
+
+db.TaskAns.find ( {"product_color": "indigo"} AND {"product_price": 492.00}  ); 
+
+o/p: 2,10,17,25 id's displayed.
+
+db.TaskAns.find ( {"product_price": 492.00} );
+
+o/p: 4th id displayed.
+
+*************************************************************************************************************************
+
+10.Delete the products which product price value are same
+
+db.TaskAns.aggregate([{$group: {_id: "$product_price",dproducts: { $push: "$_id" },count: { $sum: 1 }}},{$match: {count: { $eq: 1 }}}]).toArray().length
+
+o/p: 
+    duplicate values removed.
+    length : 21
+
+*************************************************************************************************************************
